@@ -1,18 +1,20 @@
 import { Avatar, Box, Typography } from "@mui/material";
-//importar imagem
 import banner from "../../assets/img/banner-profile.jpg";
 import avatar from "../../assets/img/avatar-profile.png";
-
 import { CalendarMonthOutlined } from "@mui/icons-material";
+import { IntlProvider, FormattedDate } from "react-intl";
 
-//Import do estilo
 import "./style.css";
 
-function HeaderProfile() {
+type HeaderProfileProps = {
+  user: any;
+};
+
+function HeaderProfile({ user }: HeaderProfileProps) {
   return (
     <Box id="header-profile">
       <Box className="header-profile-background">
-        <img src={banner} />
+        <img src={banner} alt="Banner" />
       </Box>
 
       <Box className="header-profile-detail">
@@ -24,17 +26,24 @@ function HeaderProfile() {
         />
 
         <Box className="header-profile-detail-text">
-          <Typography variant="h5">Fulano de Tal</Typography>
-          <Typography variant="subtitle1" component={'h6'}>@fulanodetal</Typography>
-          <Typography variant="subtitle1" component={'p'}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Reprehenderit, placeat aliquam eligendi ut ducimus molestiae aperiam
-            culpa voluptatem, dolorem sint nulla fuga aspernatur pariatur omnis
-            eveniet beatae quo ab quis.
+          <Typography variant="h5"> {user.fullname} </Typography>
+          <Typography variant="subtitle1" component={"h6"}>
+            @{user.username}
+          </Typography>
+          <Typography variant="subtitle1" component={"p"}>
+            {user.description}
           </Typography>
           <Typography variant="caption">
             <CalendarMonthOutlined />
-            Entrou em Agosto de 2023
+            <IntlProvider locale="pt">
+              Entrou em <></>
+              <FormattedDate
+                value={new Date(user.createdAt)}
+                day="numeric"
+                month="long"
+                year="numeric"
+              />
+            </IntlProvider>
           </Typography>
         </Box>
       </Box>
