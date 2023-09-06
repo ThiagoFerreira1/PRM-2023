@@ -14,32 +14,33 @@ function HeaderProfile({ user }: HeaderProfileProps) {
   return (
     <Box id="header-profile">
       <Box className="header-profile-background">
-        <img src={banner} alt="Banner" />
+        <img src={banner} />
       </Box>
 
       <Box className="header-profile-detail">
         <Avatar
-          className="header-profile-detail-avatar"
-          alt="Fulano de Tal"
+          alt={user.fullname}
           style={{ width: 128, height: 128 }}
           src={avatar}
+          className="header-profile-detail-avatar"
         />
-
         <Box className="header-profile-detail-text">
-          <Typography variant="h5"> {user.fullname} </Typography>
-          <Typography variant="subtitle1" component={"h6"}>
+          <Typography variant="h5">{user.fullname}</Typography>
+
+          <Typography variant="subtitle1" component="h6">
             @{user.username}
           </Typography>
-          <Typography variant="subtitle1" component={"p"}>
+
+          <Typography variant="subtitle1" component="p">
             {user.description}
           </Typography>
+
           <Typography variant="caption">
             <CalendarMonthOutlined />
-            <IntlProvider locale="pt">
-              Entrou em <></>
+            <IntlProvider locale="pt-BR">
+              Entrou em{" "}
               <FormattedDate
-                value={new Date(user.createdAt)}
-                day="numeric"
+                value={user.createdAt}
                 month="long"
                 year="numeric"
               />
