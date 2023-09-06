@@ -1,6 +1,6 @@
 import { Avatar, Box, Typography } from "@mui/material";
 import banner from "../../assets/img/banner-profile.jpg";
-import avatar from "../../assets/img/avatar-profile.png";
+import avatar from "../../assets/img/avatar-profile.jpeg";
 import { CalendarMonthOutlined } from "@mui/icons-material";
 import { IntlProvider, FormattedDate } from "react-intl";
 
