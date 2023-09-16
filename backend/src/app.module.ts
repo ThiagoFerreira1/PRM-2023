@@ -4,6 +4,9 @@ import { AppService } from './app.service';
 import { ProfileController } from './controllers/profile.controller';
 import { ProfileService } from './services/profile.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserController } from './controllers/user.controller';
+import { UserService } from './services/user.service';
+import { User } from './entities/user.entity';
 
 @Module({
   imports: [
@@ -13,10 +16,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       port: 3306,
       username: 'root',
       password: 'root',
-      database: 'prm_2023'
-    })
+      database: 'prm_2023',
+      entities: [User] //Trazer as entidades que quero caregar
+    }),
+    TypeOrmModule.forFeature([User])
   ],
-  controllers: [AppController, ProfileController],
-  providers: [AppService, ProfileService],
+  //Lembrar de importar
+  controllers: [AppController, ProfileController, UserController],
+  providers: [AppService, ProfileService, UserService],
 })
 export class AppModule {}

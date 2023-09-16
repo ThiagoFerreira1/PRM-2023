@@ -6,7 +6,7 @@ type TopicCardProps = {
   topic: any;
 };
 
-function TopicCard(props: TopicCardProps) {
+function TopicCard({ topic }: TopicCardProps) {
   return (
     <div id="topic-card">
       <TopicCardHeader />

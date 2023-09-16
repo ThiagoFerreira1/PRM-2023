@@ -11,7 +11,7 @@ export class User {
     @Column({nullable: false, length: 20})
     username: string;
 
-    @Column({length: 250})
+    @Column({nullable: false, length : 250})
     description: string;
 
     @CreateDateColumn({name: 'created_at'})
