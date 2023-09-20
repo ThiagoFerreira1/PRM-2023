@@ -7,6 +7,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserController } from './controllers/user.controller';
 import { UserService } from './services/user.service';
 import { User } from './entities/user.entity';
+import { Topic } from './entities/topic.entity';
+import { TopicController } from './controllers/topic.controller';
+import { TopicService } from './services/topic.service';
 
 @Module({
   imports: [
@@ -17,12 +20,12 @@ import { User } from './entities/user.entity';
       username: 'root',
       password: 'root',
       database: 'prm_2023',
-      entities: [User] //Trazer as entidades que quero caregar
+      entities: [User, Topic] //Trazer as entidades que quero caregar
     }),
-    TypeOrmModule.forFeature([User])
+    TypeOrmModule.forFeature([User, Topic])
   ],
   //Lembrar de importar
-  controllers: [AppController, ProfileController, UserController],
-  providers: [AppService, ProfileService, UserService],
+  controllers: [AppController, ProfileController, UserController, TopicController],
+  providers: [AppService, ProfileService, UserService, TopicService],
 })
 export class AppModule {}
