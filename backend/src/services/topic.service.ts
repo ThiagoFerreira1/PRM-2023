@@ -19,8 +19,8 @@ export class TopicService {
     return this.repository.findOneBy({ id: id });
   }
 
-  create(Topic: Topic): Promise<Topic> {
-    return this.repository.save(Topic);
+  create(topic: Topic): Promise<Topic> {
+    return this.repository.save(topic);
   }
 
   async delete(id: number): Promise<void> {

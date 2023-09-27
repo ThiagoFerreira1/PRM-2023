@@ -20,6 +20,7 @@ import { TopicService } from './services/topic.service';
       username: 'root',
       password: 'root',
       database: 'prm_2023',
+      synchronize: true,
       entities: [User, Topic] //Trazer as entidades que quero caregar
     }),
     TypeOrmModule.forFeature([User, Topic])
