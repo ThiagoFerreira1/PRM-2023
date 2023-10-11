@@ -1,11 +1,26 @@
-import { Controller, Get, Param, Body, ParseIntPipe, Post, Delete, HttpCode, HttpException, HttpStatus, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Body,
+  ParseIntPipe,
+  Post,
+  Delete,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { Topic } from 'src/entities/topic.entity';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { TopicService } from 'src/services/topic.service';
 
 @Controller('topics')
 export class TopicController {
   constructor(private readonly service: TopicService) {}
 
+  @UseGuards(AuthGuard)
   @Get()
   findAll(): Promise<Topic[]> {
     return this.service.findAll();
@@ -40,7 +55,10 @@ export class TopicController {
   }
 
   @Put(':id')
-  async update(@Param('id', ParseIntPipe) id: number, @Body() topic: Topic): Promise<Topic> {
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() topic: Topic,
+  ): Promise<Topic> {
     const found = await this.service.findById(id);
 
     if (!found) {
