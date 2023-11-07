@@ -1,5 +1,3 @@
-import { error } from 'console';
-
 export class ApplicationException extends Error {
   statusCode: number;
   message: string;
@@ -10,4 +8,5 @@ export class ApplicationException extends Error {
     this.message = message;
     Object.setPrototypeOf(this, ApplicationException.prototype);
   }
+
 }

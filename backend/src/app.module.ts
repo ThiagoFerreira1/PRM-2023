@@ -2,13 +2,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProfileController } from './controllers/profile.controller';
-import { ProfileService } from './services/profile.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserController } from './controllers/user.controller';
-import { UserService } from './services/user.service';
 import { User } from './entities/user.entity';
 import { Topic } from './entities/topic.entity';
+import { UserController } from './controllers/user.controller';
 import { TopicController } from './controllers/topic.controller';
+import { UserService } from './services/user.service';
 import { TopicService } from './services/topic.service';
 import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './services/auth.service';
@@ -18,9 +17,8 @@ import { JwtModule } from '@nestjs/jwt';
   imports: [
     JwtModule.register({
       global: true,
-      secret: "materdei",
+      secret: 'materdei',
       signOptions: {expiresIn: '24h'}
-      
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -28,26 +26,24 @@ import { JwtModule } from '@nestjs/jwt';
       port: 3306,
       username: 'root',
       password: 'root',
-      database: 'prm_2023',
+      database: 'prm_2023', 
       synchronize: true,
-      entities: [User, Topic], //Trazer as entidades que quero caregar
+      entities: [User, Topic]
     }),
-    TypeOrmModule.forFeature([User, Topic]),
+    TypeOrmModule.forFeature([User, Topic])
   ],
-  //Lembrar de importar
   controllers: [
-    AppController,
-    ProfileController,
-    UserController,
-    TopicController,
-    AuthController,
+    AppController, 
+    ProfileController, 
+    UserController, 
+    TopicController, 
+    AuthController
   ],
   providers: [
     AppService,
-    ProfileService,
-    UserService,
+    UserService, 
     TopicService,
-    AuthService,
+    AuthService
   ],
 })
 export class AppModule {}

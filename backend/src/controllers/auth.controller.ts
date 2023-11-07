@@ -1,36 +1,47 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
-import { AuthService } from 'src/services/auth.service';
-import { JwtService } from '@nestjs/jwt';
-import { UnauthorizedException } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, HttpCode, HttpException, HttpStatus, Post, UnauthorizedException, UseInterceptors } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { User } from "src/entities/user.entity";
+import { AuthService } from "src/services/auth.service";
+import { UserService } from "src/services/user.service";
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly service: AuthService,
-    private readonly jwtService: JwtService,
-  ) {}
 
-  @Post('signin')
-  @HttpCode(HttpStatus.OK)
-  async sighIn(@Body() Credential: Record<string, string>) {
-    const found = await this.service.validateCredential(
-      Credential.username,
-      Credential.password,
-    );
+    constructor(
+        private readonly service: AuthService,
+        private readonly jwtService: JwtService,
+        private readonly userService: UserService
+    ){}
 
-    if (!found) {
-      throw new UnauthorizedException();
+    @Post('signin')
+    @HttpCode(HttpStatus.OK)
+    async signIn(@Body() credential: Record<string, string>) {
+
+        const found = await this.service.validateCredential(credential.username, credential.password);
+
+        if (!found) {
+            throw new UnauthorizedException();
+        }
+
+        const payload = {userId: found.id, userName: found.username, fullName: found.fullname}
+        const token = await this.jwtService.signAsync(payload);
+
+        return {
+            accessToken: token
+        };
     }
 
-    const payload = {
-      userId: found.id,
-      username: found.username,
-    };
+    @Post('signup')
+    async signUp(@Body() user: User): Promise<User> {
 
-    const token = await this.jwtService.signAsync(payload);
+        const found = await this.userService.findByUsername(user.username);
 
-    return {
-      accessToken: token,
-    };
-  }
+        if (found) {
+            throw new HttpException('Este nome de usuário já está em uso', HttpStatus.CONFLICT)
+        }
+
+        return this.userService.create(user);
+    }
+
 }

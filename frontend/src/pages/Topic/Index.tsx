@@ -1,80 +1,102 @@
-import { Box } from "@mui/material";
-import HeaderProfile from "../../components/HeaderProfile";
-import TopicList from "../../components/TopicList";
-import { useEffect, useState } from "react";
+import { Alert, Box, Snackbar } from "@mui/material"
+import HeaderProfile from "../../components/HeaderProfile"
+import TopicList from "../../components/TopicList"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+import { useAuth } from "../../hook/useAuth"
+import { getProfileByUsername } from "../../services/Index"
 
 function TopicPage() {
-  const [profile, setProfile] = useState({});
 
-  useEffect(() => {
-    fetch("http://localhost:3000/profile")
-      .then((res) => res.json())
-      .then((data) => {
-        setProfile(data);
-      });
-  }, []);
+    //PROFILE
+    const { user } = useAuth();
+    const params = useParams();
+    const [profile, setProfile] = useState({});
 
-  const topics = [
-    {
-      owner: { fullname: "Joao Carlos" },
-      content:
-        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Suscipit rerum laboriosam magni repellat, odio est dolore veritatis porro consequuntur nesciunt iste, excepturi voluptatibus, quaerat adipisci nulla ratione necessitatibus.",
-      comments: 1,
-      reposts: 1,
-      likes: 30,
-      createdAt: "2023-08-01 19:30:00",
-    },
-    {
-      owner: { fullname: "Mateus Fernandes" },
-      content:
-        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Suscipit rerum laboriosam magni repellat, odio est dolore veritatis porro consequuntur nesciunt iste, excepturi voluptatibus, quaerat adipisci nulla ratione necessitatibus.",
-      comments: 12,
-      reposts: 2,
-      likes: 300,
-      createdAt: "2019-05-01 18:30:00",
-    },
-    {
-      owner: { fullname: "Bolsonaro" },
-      content:
-        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Suscipit rerum laboriosam magni repellat, odio est dolore veritatis porro consequuntur nesciunt iste, excepturi voluptatibus, quaerat adipisci nulla ratione necessitatibus.",
-      comments: 2,
-      reposts: 6,
-      likes: 500,
-      createdAt: "20023-06-17 06:30:00",
-    },
-    {
-      owner: { fullname: "Fernando Chagas" },
-      content:
-        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Suscipit rerum laboriosam magni repellat, odio est dolore veritatis porro consequuntur nesciunt iste, excepturi voluptatibus, quaerat adipisci nulla ratione necessitatibus.",
-      comments: 2,
-      reposts: 0,
-      likes: 87,
-      createdAt: "2023-01-09 14:30:00",
-    },
-    {
-      owner: { fullname: "Joao Mineiro" },
-      content:
-        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Suscipit rerum laboriosam magni repellat, odio est dolore veritatis porro consequuntur nesciunt iste, excepturi voluptatibus, quaerat adipisci nulla ratione necessitatibus.",
-      comments: 2,
-      reposts: 2,
-      likes: 2,
-      createdAt: "2023-08-01 19:30:00",
-    },
-  ];
+    //STATE
+    const [messageError, setMessageError] = useState('');
 
-  return (
-    <Box  
-      id="topic-page"
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      gap={3}
-    >
-      <HeaderProfile user={profile} />
+    useEffect(() => {
 
-      <TopicList items={topics} />
-    </Box>
-  );
+        const username = params.username ? params.username : user?.username;
+
+        if (username) {
+            getProfileByUsername(username)
+                .then(result => {
+                    setProfile(result.data);
+
+                    //TO-DO: Carregar topics do usuario (owner)
+                })
+                .catch(error => {
+                    setMessageError(String(error.message))
+                })
+        }
+
+    }, [])
+
+    const topics = [
+        {
+            owner: { fullname: 'Pedro da Silva' },
+            content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam ad sapiente non veritatis aspernatur architecto! Eveniet, et eius maxime dolorem sequi, nulla aliquam ipsam tenetur magni officia, quisquam totam sapiente!',
+            comments: 1,
+            reposts: 1,
+            likes: 30,
+            createdAt: '2023-08-01 19:23:00'
+        },{
+            owner: { fullname: 'Marina Silva' },
+            content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam ad sapiente non veritatis aspernatur architecto! Eveniet, et eius maxime dolorem sequi, nulla aliquam ipsam tenetur magni officia, quisquam totam sapiente!',
+            comments: 12,
+            reposts: 2,
+            likes: 300,
+            createdAt: '2023-08-02 19:23:00'
+        },{
+            owner: { fullname: 'Lula da Silva' },
+            content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam ad sapiente non veritatis aspernatur architecto! Eveniet, et eius maxime dolorem sequi, nulla aliquam ipsam tenetur magni officia, quisquam totam sapiente!',
+            comments: 51,
+            reposts: 14,
+            likes: 30,
+            createdAt: '2023-08-04 19:23:00'
+        },{
+            owner: { fullname: 'Neymar Junior' },
+            content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam ad sapiente non veritatis aspernatur architecto! Eveniet, et eius maxime dolorem sequi, nulla aliquam ipsam tenetur magni officia, quisquam totam sapiente!',
+            comments: 0,
+            reposts: 0,
+            likes: 1,
+            createdAt: '2023-08-7 19:23:00'
+        },{
+            owner: { fullname: 'Pedro da Scobby' },
+            content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam ad sapiente non veritatis aspernatur architecto! Eveniet, et eius maxime dolorem sequi, nulla aliquam ipsam tenetur magni officia, quisquam totam sapiente!',
+            comments: 0,
+            reposts: 0,
+            likes: 10,
+            createdAt: '2023-08-11 19:23:00'
+        },
+    ]
+
+
+
+    return (
+        <Box id="topic-page" display="flex" flexDirection="column"
+             alignItems="center" gap={3}>
+            
+            <HeaderProfile user={profile} />
+
+            <TopicList items={topics} />
+
+            <Snackbar
+                open={Boolean(messageError)}
+                autoHideDuration={6000}
+                anchorOrigin={{vertical: 'top', horizontal: 'right'}}>
+
+                <Alert severity="error" 
+                    variant="filled" 
+                    onClose={() => setMessageError('')}>
+                    {messageError}
+                </Alert>
+            </Snackbar>
+        </Box>
+    )
+
 }
 
-export default TopicPage;
+export default TopicPage

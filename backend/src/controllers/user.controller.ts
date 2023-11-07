@@ -1,79 +1,60 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Body,
-  ParseIntPipe,
-  Post,
-  Delete,
-  HttpCode,
-  HttpException,
-  HttpStatus,
-  Put,
-} from '@nestjs/common';
-import { User } from 'src/entities/user.entity';
-import { UserService } from 'src/services/user.service';
-import { Repository } from 'typeorm';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post, Put, UseInterceptors } from "@nestjs/common";
+import { User } from "src/entities/user.entity";
+import { UserService } from "src/services/user.service";
 
+
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('users')
 export class UserController {
-  constructor(private readonly service: UserService) {}
+    constructor(private readonly service: UserService) {}
 
-  @Get()
-  findAll(): Promise<User[]> {
-    return this.service.findAll();
-  }
-
-  @Get(':id')
-  async findById(@Param('id', ParseIntPipe) id: number): Promise<User> {
-    const found = await this.service.findById(id);
-
-    if (!found) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    @Get()
+    findAll(): Promise<User[]> {
+        return this.service.findAll();
     }
+    @Get(':id')
+    async findById(@Param('id', ParseIntPipe) id: number): Promise<User> {
+        const found = await this.service.findById(id);
 
-    return found;
-  }
+        if (!found) {
+            throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+        }
 
-  @Get(':usename')
-  async findByUsername(@Param('usename') usename: string): Promise<User> {
-    const found = await this.service.findByUsername(usename);
-
-    if (!found) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        return found;
     }
+    @Get(':username')
+    async findByUsername(@Param('username') username: string): Promise<User> {
+        const found = await this.service.findByUsername(username);
 
-    return found;
-  }
+        if (!found) {
+            throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+        }
 
-  @Post()
-  create(@Body() user: User): Promise<User> {
-    return this.service.create(user);
-  }
-
-  @Delete(':id')
-  @HttpCode(204)
-  async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    const found = await this.service.findById(id);
-
-    if (!found) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        return found;
     }
-
-    await this.service.delete(id);
-  }
-
-  @Put(':id')
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() user: User,
-  ): Promise<User> {
-    const found = await this.service.findById(id);
-
-    if (!found) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    @Post()
+    create(@Body() user: User): Promise<User> {
+        return this.service.create(user);
     }
+    @Delete(':id')
+    @HttpCode(204)
+    async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
+        const found = await this.service.findById(id);
 
-    return this.service.update(id, user);
-  }
+        if (!found) {
+            throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+        }
+
+        return this.service.delete(found.id);
+    }
+    @Put(':id')
+    async update(@Param('id', ParseIntPipe) id: number, @Body() user: User): Promise<User> {
+        const found = await this.service.findById(id);
+
+        if (!found) {
+            throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+        }
+
+        return this.service.update(found.id, user);
+    }
 }
