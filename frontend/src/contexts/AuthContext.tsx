@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { ICredential, IUser } from "../@types/Index";
-import { signIn, signUp } from "../services/Index";
+import { signIn, signUp } from "../services";
 import jwtDecode from "jwt-decode";
 import { AxiosError } from "axios";
 

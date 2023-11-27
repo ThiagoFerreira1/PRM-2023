@@ -3,10 +3,9 @@ export class ApplicationException extends Error {
   message: string;
 
   constructor(message: string, statusCode: number = 500) {
-    super(message);
-    this.statusCode = statusCode;
-    this.message = message;
-    Object.setPrototypeOf(this, ApplicationException.prototype);
+      super(message);
+      this.statusCode = statusCode;
+      this.message = message;
+      Object.setPrototypeOf(this, ApplicationException.prototype)
   }
-
 }
